@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
         submodules: true
@@ -25,7 +25,7 @@ jobs:
       run: |
         curl -L -o skia.zip https://github.com/aseprite/skia/releases/download/m124-0/skia-windows-Release-x64.zip
         mkdir skia
-        tar -xf skia.zip -C skia
+        powershell -Command "Expand-Archive -LiteralPath skia.zip -DestinationPath skia"
 
     - name: Configure CMake
       run: |
@@ -37,7 +37,7 @@ jobs:
           -D SKIA_DIR=skia `
           -G Ninja
 
-    - name: Build
+    - name: Build Aseprite
       run: cmake --build build --target aseprite
 
     - name: Upload exe
@@ -45,4 +45,3 @@ jobs:
       with:
         name: aseprite-windows
         path: build/bin/aseprite.exe
-
